@@ -1,0 +1,25 @@
+{
+  "name": "maledb",
+  "version": "0.1.0",
+  "private": true,
+  "description": "麻了DB：写麻了？摸两张。DBX 四人大众麻将插件。",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yuwenGueen/dbx-maledb.git"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "package": "node scripts/package.mjs",
+    "release:metadata": "node scripts/release-metadata.mjs"
+  },
+  "devDependencies": {
+    "vite": "8.2.1"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

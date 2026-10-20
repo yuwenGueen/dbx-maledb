@@ -1,0 +1,12 @@
+MaLeDB / 麻了DB
+Copyright 2026 yuwenGueen
+
+Original application code, SVG/CSS tile artwork and locally synthesized sounds
+are provided under Apache-2.0. The generated homepage artwork and its prompts
+are included as project assets.
+
+This distribution includes GB-Mahjong and gb-mahjong-js components under MIT
+and the unmodified DBX Go SDK under Apache-2.0. Their copyright and license
+notices are retained in assets/THIRD_PARTY_LICENSES.txt and the source tree.
+
+This is an independent DBX plugin. It is not affiliated with Tencent.

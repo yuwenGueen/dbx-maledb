@@ -1,0 +1,22 @@
+{
+  "generator": "built-in image_gen",
+  "revision": "Ordinary human player identities",
+  "prompt": "Use case: precise-object-edit / UI mockup revision.\nEdit this existing DBX Chinese Mahjong interface concept. The user likes the design but wants ordinary people as players, not database products personified.\n\nChange only player identities and any database-vendor labels/logos:\n- Top/opposite player's name must read exactly \"阿宁\".\n- Left player's name must read exactly \"小林\".\n- Right player's name must read exactly \"晚风\".\n- Bottom/human player remains \"你\".\n- Replace any PostgreSQL elephant, MySQL dolphin, Redis logo or database-cylinder PLAYER AVATAR with a small ordinary human profile avatar or simple friendly head-and-shoulders silhouette. Keep avatars compact, tastefully rendered, and matched to the original image's visual style. No costumed characters or oversized portraits.\n- Remove every occurrence of the words \"PostgreSQL\", \"MySQL\", \"Redis\" and \"PG\" from the entire image. If any occur in the narrow host icon rail, turn those rail entries into neutral icon-only workbench navigation, with no vendor labels.\n\nPreserve the established art direction, exact palette, table layout, perspective, tile design, all tile racks and discards, wind compass, score labels, app header, Chinese typography, buttons, shadows, lighting and all spacing. Keep the \"DBX\" brand, the \"雀栈\" tab, and the tiny generic database mark on tile BACKS; those subtle workbench and tile-back details are enough DBX identity. Keep traditional Mahjong tile FACES unchanged. Do not add any new game mechanics, decoration, panels or text. Output one complete revised interface at the same size and composition as the input.",
+  "inputs": [
+    {
+      "key": "A",
+      "name": "青瓷工作台",
+      "file": "A-celadon-workbench.png"
+    },
+    {
+      "key": "B",
+      "name": "深蓝夜局",
+      "file": "B-midnight-blue.png"
+    },
+    {
+      "key": "C",
+      "name": "云白闲局",
+      "file": "C-cloud-white.png"
+    }
+  ]
+}

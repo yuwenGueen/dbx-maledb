@@ -1,0 +1,44 @@
+import assert from "node:assert/strict";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
+import { join } from "node:path";
+
+const root = fileURLToPath(new URL("..", import.meta.url));
+const manifest = JSON.parse(await readFile(join(root, "manifest.json"), "utf8"));
+const listing = JSON.parse(await readFile(join(root, ".dbx-store.json"), "utf8"));
+const repository = process.env.GITHUB_REPOSITORY || "yuwenGueen/dbx-maledb";
+const tag = process.env.GITHUB_REF_TYPE === "tag" ? process.env.GITHUB_REF_NAME : `v${manifest.version}`;
+assert.match(repository, /^[\w.-]+\/[\w.-]+$/);
+assert.equal(tag, `v${manifest.version}`, "Tag must match manifest version");
+assert.equal(manifest.source, `https://github.com/${repository}`);
+assert.deepEqual(listing.permissions, manifest.permissions);
+await readFile(join(root, "docs/releases", `${tag}.md`), "utf8");
+const target = "darwin-arm64";
+const filename = `${manifest.id}-${manifest.version}-${target}.dbxp`;
+const packagePath = join(root, "dist", filename);
+const bytes = await readFile(packagePath);
+const entries = execFileSync("unzip", ["-Z1", packagePath], { encoding: "utf8" }).trim().split(/\r?\n/);
+assert.ok(!entries.includes("signature.json"), "Review candidates must be unsigned");
+assert.ok(entries.every((name) => !name.includes(".dbx-dev") && !name.endsWith(".env") && !name.endsWith("qa.html")));
+const packed = JSON.parse(execFileSync("unzip", ["-p", packagePath, "manifest.json"], { encoding: "utf8" }));
+for (const key of ["id", "publisher", "version"]) assert.equal(packed[key], manifest[key]);
+assert.deepEqual(packed.permissions, manifest.permissions);
+assert.ok(entries.includes(packed.entrypoints.backend.executable));
+assert.ok(entries.includes(packed.entrypoints.ui.entry));
+const checksums = JSON.parse(execFileSync("unzip", ["-p", packagePath, "checksums.json"], { encoding: "utf8" }));
+assert.equal(checksums.algorithm, "sha256");
+assert.deepEqual(entries.filter((name) => name !== "checksums.json").sort(), Object.keys(checksums.files).sort());
+for (const [name, expected] of Object.entries(checksums.files)) {
+  const content = execFileSync("unzip", ["-p", packagePath, name], { maxBuffer: 32 * 1024 * 1024 });
+  assert.equal(createHash("sha256").update(content).digest("hex"), expected, `Checksum mismatch: ${name}`);
+}
+const artifact = { target, url: `https://github.com/${repository}/releases/download/${tag}/${filename}`, sha256: createHash("sha256").update(bytes).digest("hex"), size: bytes.length };
+const plugin = Object.fromEntries(["id", "name", "description", "publisher", "version", "permissions"].map((key) => [key, manifest[key]]));
+await writeFile(join(root, "dist", filename.replace(/\.dbxp$/, ".artifact.json")), JSON.stringify(artifact, null, 2) + "\n");
+await writeFile(join(root, "dist/release-candidates.json"), JSON.stringify({ plugin, artifacts: [artifact] }, null, 2) + "\n");
+const candidate = { schemaVersion: 1, id: manifest.id, publisher: manifest.publisher, version: manifest.version, ...listing, icon: `https://raw.githubusercontent.com/${repository}/${tag}/${listing.icon}`, source: `https://github.com/${repository}/tree/${tag}`, targets: [artifact] };
+await mkdir(join(root, "dist/store-submission"), { recursive: true });
+await writeFile(join(root, "dist/store-submission", `${manifest.id}.json`), JSON.stringify(candidate, null, 2) + "\n");
+console.log(`Verified ${manifest.id}@${manifest.version}; generated unsigned release and store candidate metadata (${artifact.sha256}).`);

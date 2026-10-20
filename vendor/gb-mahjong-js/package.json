@@ -1,0 +1,87 @@
+{
+  "name": "gb-mahjong-js",
+  "version": "2.2.1",
+  "description": "gb-mahjong-js是一个国标麻将的js库，实现了麻将中的一些基本类型的封装，提供了算番、计算听牌等多种实用工具。",
+  "homepage": "https://github.com/tziakcha-stats/gb-mahjong-js",
+  "author": {
+    "name": "Choimoe",
+    "email": "qwq.shq@gmail.com",
+    "url": "https://github.com/Choimoe"
+  },
+  "files": [
+    "efficiency.js",
+    "efficiency.d.ts",
+    "lib",
+    "types",
+    "native",
+    "build",
+    "third_party/GB-Mahjong/mahjong",
+    "third_party/GB-Mahjong/console",
+    "third_party/GB-Mahjong/LICENSE"
+  ],
+  "main": "lib/index.js",
+  "keywords": [
+    "mahjong"
+  ],
+  "devDependencies": {
+    "coveralls": "^3.0.7",
+    "esbuild": "^0.28.0",
+    "eslint": "^6.6.0",
+    "prettier": "^1.19.1",
+    "husky": "^3.0.9",
+    "lint-staged": "^9.4.3",
+    "eslint-config-prettier": "^6.6.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-config-xo": "^0.27.2",
+    "jest": "^26.1.0"
+  },
+  "engines": {
+    "npm": ">= 4.0.0"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.json": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "eslintConfig": {
+    "extends": [
+      "xo",
+      "prettier"
+    ],
+    "env": {
+      "jest": true,
+      "node": true
+    },
+    "rules": {
+      "prettier/prettier": "error"
+    },
+    "plugins": [
+      "prettier"
+    ]
+  },
+  "scripts": {
+    "browser-smoke": "node test/browser-smoke/build.js",
+    "pretest": "eslint .",
+    "test": "jest",
+    "build:bridge": "node scripts/build-bridge.js",
+    "prepack": "npm test -- --runInBand"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tziakcha-stats/gb-mahjong-js.git"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "license": "MIT"
+}

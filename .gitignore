@@ -1,0 +1,15 @@
+node_modules/
+dist/
+ui/
+bin/
+.dbx-dev/
+*.log
+.DS_Store
+.env
+.env.*
+vendor/**/build/
+designs/*.png
+!designs/runtime-home-1280.png
+!designs/runtime-table-1280x800.png
+!designs/runtime-sandbox-win.png
+!designs/homepage-ma-le-db.png
